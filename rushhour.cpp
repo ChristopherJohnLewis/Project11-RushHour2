@@ -13,6 +13,7 @@
 // Header Files //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 #include <iostream>
+#include <string>
 
 #include "Timer.h" //Found out the 8 car case finishes in about 103.4 seconds
 #include "car.h"
@@ -21,6 +22,7 @@
 bool readIn(board& playBoard);
 bool DidWeWin(const board& playBoard);
 void SolveIt(int moves, board& playBoard);
+std::string char_to_string (char array[][6], int n);
 
 /**
 	  *@brief main
@@ -186,3 +188,13 @@ void SolveIt(int moves, board& playBoard){
 	}
 
 }
+std::string char_to_string (char array[][6], int n)
+  {
+   std::string temp;
+   for (unsigned int i = 0; i < 1; i += 1)
+    {
+     temp+=array[i];
+     temp+="\0";	
+    }
+   return temp;
+  } 
