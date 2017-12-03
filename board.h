@@ -19,6 +19,7 @@ class board{
 	public:
 	
 	static const int MAX_SIZE = 6;
+	static const int MAX_CARS = 18;
 /**
 	  *@brief Default constructor
 	  *
@@ -37,22 +38,17 @@ class board{
 	  *@note the default values for the board are * to represent empty space
 */
 		board(){
-
-			cap = 10;
 			carInArray = 0;
-
-			for(int j = 0; j < 6; j++){
-
-				for(int i = 0; i < 6; i++){
-
-					boardArr[j][i] = '*';
-
-				}
-
+			boardArr = new char*[MAX_SIZE];
+			for(int i = 0; i < MAX_SIZE; i++)
+			{
+				boardArr[i] = new char[MAX_SIZE];
 			}
-
-			bestMoves = 100;
-
+			for(int j = 0; j < MAX_SIZE; j++){
+				for(int i = 0; i < MAX_SIZE; i++){
+					boardArr[j][i] = '*';
+				}
+			}
 		}
 /**
 	  *@brief copy constructor
@@ -72,14 +68,15 @@ class board{
 	  *@note
 */
 		board(const board& other){
-
-			bestMoves = other.bestMoves;
 			carInArray = other.carInArray;
-			cap = other.cap;
+			boardArr = new char*[MAX_SIZE];
+			for(int i = 0; i < MAX_SIZE; i++)
+			{
+				boardArr[i] = new char[MAX_SIZE];
+			}
+			for(int j = 0; j < MAX_SIZE; j++){
 
-			for(int j = 0; j < 6; j++){
-
-				for(int i = 0; i < 6; i++){
+				for(int i = 0; i < MAX_SIZE; i++){
 
 					boardArr[j][i] = other.boardArr[j][i];
 
@@ -87,7 +84,7 @@ class board{
 
 			}
 
-			for(int i = 0; i < 10; i++){
+			for(int i = 0; i < MAX_CARS; i++){
 
 				carArr[i] = other.carArr[i];
 
@@ -116,27 +113,19 @@ class board{
 		board& operator=(const board& other){
 
 			if(&other == this){}
-			
 			else{
-				
-				bestMoves = other.bestMoves;
 				carInArray = other.carInArray;
-				cap = other.cap;
 
-				for(int j = 0; j < 6; j++){
+				for(int j = 0; j < MAX_SIZE; j++){
 
-					for(int i = 0; i < 6; i++){
-
+					for(int i = 0; i < MAX_SIZE; i++){
 						boardArr[j][i] = other.boardArr[j][i];
-
 					}
 
 				}
 
-				for(int i = 0; i < 10; i++){
-
+				for(int i = 0; i < MAX_CARS; i++){
 					carArr[i] = other.carArr[i];
-
 				}
 
 			}
@@ -150,7 +139,7 @@ class board{
 			return boardArr;
 		}
 		
-		void setBoard(const char** newBoard)
+		void setBoard(char** newBoard)
 		{
 			for(int i = 0; i < MAX_SIZE; i++)
 			{
@@ -422,11 +411,10 @@ class board{
 
 		}
 
-		int cap;
 		int carInArray;
-		int bestMoves;
-		char boardArr[MAX_SIZE][MAX_SIZE];
-		car carArr[10];
+//		char boardArr[MAX_SIZE][MAX_SIZE];
+		char** boardArr;
+		car carArr[MAX_CARS];
 
 };
 
