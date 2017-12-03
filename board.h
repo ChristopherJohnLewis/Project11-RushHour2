@@ -139,7 +139,7 @@ class board{
 			return boardArr;
 		}
 		
-		void setBoard(char** newBoard)
+		void setBoard(char newBoard[MAX_SIZE][MAX_SIZE])
 		{
 			for(int i = 0; i < MAX_SIZE; i++)
 			{
@@ -150,6 +150,14 @@ class board{
 			}
 		}
 		
+		~board()
+		{
+			for(int i = 0; i < MAX_SIZE; i++)
+			{
+				delete[] boardArr[i];
+			}
+			delete[] boardArr;
+		}
 		
 /**
 	  *@brief add

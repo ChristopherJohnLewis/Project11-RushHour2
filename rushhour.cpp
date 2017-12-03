@@ -23,8 +23,8 @@
 bool readIn(board& playBoard);
 bool DidWeWin(const board& playBoard);
 bool SolveIt(int moves, std::queue<std::string> workQueue, std::map<std::string, int> dictionary, int count, int& finalMoves);
-std::string board_to_string(char** boardArray);
-char** string_to_char(std::string);
+std::string char_to_string(char** array);
+void string_to_char(std::string str, char temp[board::MAX_SIZE][board::MAX_SIZE]);
 
 /**
 	  *@brief main
@@ -52,7 +52,7 @@ int main(){
 
 	while(readIn(playBoard)){
 		std::string currBoard;
-		currBoard = board_to_string(playBoard.getBoard());
+		currBoard = char_to_string(playBoard.getBoard());
 		workQueue.push(currBoard);
 		dictionary.insert(std::pair<std::string, int>(currBoard, 0));
 		if(SolveIt(0, workQueue, dictionary, 1, finalMoves))
@@ -154,6 +154,7 @@ bool DidWeWin(const board& playBoard){
 */
 bool SolveIt(int moves, std::queue<std::string> workQueue, std::map<std::string, int> dictionary, int count, int& finalMoves){
 	std::string currBoard;
+	char tempBuffer[board::MAX_SIZE][board::MAX_SIZE];
 	int newCount = 0;
 	board playBoard;
 	if(count == 0)	// Count should only be 0 if there are no more options left to move.
@@ -162,8 +163,9 @@ bool SolveIt(int moves, std::queue<std::string> workQueue, std::map<std::string,
 	}
 	for(int i = 0; i < count; i++)
 	{
-		playBoard.setBoard(string_to_char(workQueue.front()));
-		currBoard = board_to_string(playBoard.getBoard());
+		string_to_char(workQueue.front(), tempBuffer);
+		playBoard.setBoard(tempBuffer);
+		currBoard = char_to_string(playBoard.getBoard());
 		workQueue.pop();
 		if(DidWeWin(playBoard))
 		{
@@ -174,13 +176,14 @@ bool SolveIt(int moves, std::queue<std::string> workQueue, std::map<std::string,
 	}
 	for(int i = 0; i < count; i++)
 	{
-		playBoard.setBoard(string_to_char(workQueue.front()));
+		string_to_char(workQueue.front(), tempBuffer);
+		playBoard.setBoard(tempBuffer);
 		workQueue.pop();
 		for(int i = 0; i < playBoard.carInArray; i++)
 		{
 			if(playBoard.moveForward(i))
 			{
-				currBoard = board_to_string(playBoard.getBoard());
+				currBoard = char_to_string(playBoard.getBoard());
 				if(dictionary.find(currBoard) != dictionary.end())
 				{
 					dictionary.insert(std::pair<std::string, int>(currBoard, moves));
@@ -191,7 +194,7 @@ bool SolveIt(int moves, std::queue<std::string> workQueue, std::map<std::string,
 			}
 			if(playBoard.moveBack(i))
 			{
-				currBoard = board_to_string(playBoard.getBoard());
+				currBoard = char_to_string(playBoard.getBoard());
 				if(dictionary.find(currBoard) != dictionary.end())
 				{
 					dictionary.insert(std::pair<std::string, int>(currBoard, moves));
@@ -203,4 +206,30 @@ bool SolveIt(int moves, std::queue<std::string> workQueue, std::map<std::string,
 		}
 	}
 	return SolveIt(moves+1, workQueue, dictionary, newCount, finalMoves);	
+}
+
+std::string char_to_string (char** array)
+  {
+   std::string temp;
+   for (unsigned int i = 0; i < 1; i += 1)
+    {
+     temp+=array[i];
+     temp+="\0";	
+    }
+   return temp;
+  } 
+
+void string_to_char(std::string str, char temp[board::MAX_SIZE][board::MAX_SIZE])
+ {
+  int i=0, j=0;
+  for (unsigned int n = 0; n < 36; n += 1)
+   {
+    temp[i][j]=str[n];
+    j++;
+    if (j==6)
+     {
+      i++;
+      j=0;	
+     }
+   }
 }
