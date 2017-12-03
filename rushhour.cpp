@@ -23,6 +23,7 @@ bool readIn(board& playBoard);
 bool DidWeWin(const board& playBoard);
 void SolveIt(int moves, board& playBoard);
 std::string char_to_string (char array[][6], int n);
+void string_to_char(std::string str, char temp[][6], int n);
 
 /**
 	  *@brief main
@@ -198,3 +199,17 @@ std::string char_to_string (char array[][6], int n)
     }
    return temp;
   } 
+void string_to_char(std::string str, char temp[][6], int n)
+ {
+  int i=0, j=0;
+  for (unsigned int n = 0; n < 36; n += 1)
+   {
+    temp[i][j]=str[n];
+    j++;
+    if (j==6)
+     {
+      i++;
+      j=0;	
+     }
+   }
+  }
