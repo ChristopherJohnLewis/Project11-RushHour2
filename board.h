@@ -22,6 +22,15 @@ public:
 	static const int MAX_SIZE = 6;
 	static const int MAX_CARS = 18;
 
+	board()
+	{
+		for(int i = 0; i < MAX_SIZE*MAX_SIZE; i++)
+		{
+			boardArr += '*';
+		}
+		carInArray = 0;
+	}
+	
 	std::string getBoard() const
 	{
 		return boardArr;
@@ -41,6 +50,21 @@ public:
 	{
 		return carInArray;
 	}
+	
+	void setNumOfCars(int numOfCars)
+	{
+		carInArray = numOfCars;
+	}
+	
+	void clear()
+	{
+		for(int i = 0; i < MAX_SIZE*MAX_SIZE; i++)
+		{
+			boardArr[i] = '*';
+		}
+		carInArray = 0;
+	}
+	
 		
 /**
 	  *@brief add

@@ -22,7 +22,7 @@
 
 bool readIn(board& playBoard);
 bool DidWeWin(const board& playBoard);
-bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dictionary, int& finalMoves);
+bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dictionary, board& playBoard, int& finalMoves);
 
 /**
 	  *@brief main
@@ -60,15 +60,16 @@ int main(){
 		// Push first board.
 		workQueue.push(playBoard.getBoard());
 		dictionary.insert(std::pair<std::string, int>(playBoard.getBoard(), 0));
-		if(SolveIt(workQueue, dictionary, finalMoves))
+		if(SolveIt(workQueue, dictionary, playBoard, finalMoves))
 		{
 			std::cout << "Scenario "<< i << " requires " << finalMoves << " moves" << std::endl;
 		}
 		else
 		{
-			std::cout << "Scenario "<< i << "is unsolvable." << std::endl;
+			std::cout << "Scenario "<< i << " is unsolvable." << std::endl;
 		}
 		i++;
+		playBoard.clear(); // Reset board for next scenario.
 	}
 
 	return 0;
@@ -101,7 +102,6 @@ bool readIn(board& playBoard){
 	if(numCars == 0) doScenario = false;
 
 	else{
-
 		for(int i = 0; i < numCars; i++){
 			
 			std::cin >> sizeCar >> orientation >> yLoc >> xLoc;
@@ -157,14 +157,15 @@ bool DidWeWin(const board& playBoard){
 	  *
 	  *@note moves is only really used after the first recursive call
 */
-bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dictionary, int& finalMoves){
+bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dictionary, board& playBoard, int& finalMoves){
 	bool done = false, solved = false;
 	int moves = 0;
-	board playBoard;
+	int count = workQueue.size();
 	
 	while(!done)
 	{
-		if(workQueue.size() == 0)	// Count should only be 0 if there are no more options left to move.
+		count = workQueue.size();
+		if(workQueue.size() == 0)	// workQueue should only be 0 if there are no more options left to move.
 		{
 			done = true;
 			solved = false;
@@ -172,17 +173,17 @@ bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dic
 		for(unsigned int i = 0; i < workQueue.size() && !done; i++)
 		{
 			playBoard.setBoard(workQueue.front());
-			workQueue.pop();
 			if(DidWeWin(playBoard))
 			{
 				finalMoves = moves;
 				done = true;
 				solved = true;
 			}
+			workQueue.pop();
 			workQueue.push(playBoard.getBoard());
 		}
 		moves++;	// Increment moves for each level of tree.
-		for(unsigned int i = 0; i < workQueue.size() && !done; i++)
+		for(int i = 0; i < count && !done; i++)
 		{
 			playBoard.setBoard(workQueue.front());
 			workQueue.pop();
