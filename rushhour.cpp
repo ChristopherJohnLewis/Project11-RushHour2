@@ -22,9 +22,7 @@
 
 bool readIn(board& playBoard);
 bool DidWeWin(const board& playBoard);
-bool SolveIt(int moves, std::queue<std::string> workQueue, std::map<std::string, int> dictionary, int count, int& finalMoves);
-std::string char_to_string(char** array);
-void string_to_char(std::string str, char temp[board::MAX_SIZE][board::MAX_SIZE]);
+bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dictionary, int& finalMoves);
 
 /**
 	  *@brief main
@@ -51,11 +49,18 @@ int main(){
 	int i = 1;
 
 	while(readIn(playBoard)){
-		std::string currBoard;
-		currBoard = char_to_string(playBoard.getBoard());
-		workQueue.push(currBoard);
-		dictionary.insert(std::pair<std::string, int>(currBoard, 0));
-		if(SolveIt(0, workQueue, dictionary, 1, finalMoves))
+		// Reset containers for next scenario.
+		finalMoves = 0;
+		while(!workQueue.empty())
+		{
+			workQueue.pop();
+		}
+		dictionary.clear();
+		
+		// Push first board.
+		workQueue.push(playBoard.getBoard());
+		dictionary.insert(std::pair<std::string, int>(playBoard.getBoard(), 0));
+		if(SolveIt(workQueue, dictionary, finalMoves))
 		{
 			std::cout << "Scenario "<< i << " requires " << finalMoves << " moves" << std::endl;
 		}
@@ -128,7 +133,7 @@ bool readIn(board& playBoard){
 	  *@note None
 */
 bool DidWeWin(const board& playBoard){
-	if(playBoard.carArr[0].x + playBoard.carArr[0].size == 6)
+	if(playBoard.getCar(0).x + playBoard.getCar(0).size == 6)
 	{
 		return true;
 	}
@@ -152,84 +157,58 @@ bool DidWeWin(const board& playBoard){
 	  *
 	  *@note moves is only really used after the first recursive call
 */
-bool SolveIt(int moves, std::queue<std::string> workQueue, std::map<std::string, int> dictionary, int count, int& finalMoves){
-	std::string currBoard;
-	char tempBuffer[board::MAX_SIZE][board::MAX_SIZE];
-	int newCount = 0;
+bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dictionary, int& finalMoves){
+	bool done = false, solved = false;
+	int moves = 0;
 	board playBoard;
-	if(count == 0)	// Count should only be 0 if there are no more options left to move.
+	
+	while(!done)
 	{
-		return false;
-	}
-	for(int i = 0; i < count; i++)
-	{
-		string_to_char(workQueue.front(), tempBuffer);
-		playBoard.setBoard(tempBuffer);
-		currBoard = char_to_string(playBoard.getBoard());
-		workQueue.pop();
-		if(DidWeWin(playBoard))
+		if(workQueue.size() == 0)	// Count should only be 0 if there are no more options left to move.
 		{
-			finalMoves = moves;
-			return true;
+			done = true;
+			solved = false;
 		}
-		workQueue.push(currBoard);
-	}
-	for(int i = 0; i < count; i++)
-	{
-		string_to_char(workQueue.front(), tempBuffer);
-		playBoard.setBoard(tempBuffer);
-		workQueue.pop();
-		for(int i = 0; i < playBoard.carInArray; i++)
+		for(unsigned int i = 0; i < workQueue.size() && !done; i++)
 		{
-			if(playBoard.moveForward(i))
+			playBoard.setBoard(workQueue.front());
+			workQueue.pop();
+			if(DidWeWin(playBoard))
 			{
-				currBoard = char_to_string(playBoard.getBoard());
-				if(dictionary.find(currBoard) != dictionary.end())
-				{
-					dictionary.insert(std::pair<std::string, int>(currBoard, moves));
-					workQueue.push(currBoard);
-					newCount++;
-				}
-				playBoard.moveBack(i);
+				finalMoves = moves;
+				done = true;
+				solved = true;
 			}
-			if(playBoard.moveBack(i))
+			workQueue.push(playBoard.getBoard());
+		}
+		moves++;	// Increment moves for each level of tree.
+		for(unsigned int i = 0; i < workQueue.size() && !done; i++)
+		{
+			playBoard.setBoard(workQueue.front());
+			workQueue.pop();
+			for(int j = 0; j < playBoard.getNumOfCars(); j++)
 			{
-				currBoard = char_to_string(playBoard.getBoard());
-				if(dictionary.find(currBoard) != dictionary.end())
+				if(playBoard.moveForward(j))
 				{
-					dictionary.insert(std::pair<std::string, int>(currBoard, moves));
-					workQueue.push(currBoard);
-					newCount++;
+					if(dictionary.find(playBoard.getBoard()) == dictionary.end())
+					{
+						dictionary.insert(std::pair<std::string, int>(playBoard.getBoard(), moves));
+						workQueue.push(playBoard.getBoard());
+					}
+					playBoard.moveBack(j);
 				}
-				playBoard.moveForward(i);
+				if(playBoard.moveBack(j))
+				{
+					if(dictionary.find(playBoard.getBoard()) == dictionary.end())
+					{
+						dictionary.insert(std::pair<std::string, int>(playBoard.getBoard(), moves));
+						workQueue.push(playBoard.getBoard());
+					}
+					playBoard.moveForward(j);
+				}
 			}
 		}
 	}
-	return SolveIt(moves+1, workQueue, dictionary, newCount, finalMoves);	
-}
-
-std::string char_to_string (char** array)
-  {
-   std::string temp;
-   for (unsigned int i = 0; i < 1; i += 1)
-    {
-     temp+=array[i];
-     temp+="\0";	
-    }
-   return temp;
-  } 
-
-void string_to_char(std::string str, char temp[board::MAX_SIZE][board::MAX_SIZE])
- {
-  int i=0, j=0;
-  for (unsigned int n = 0; n < 36; n += 1)
-   {
-    temp[i][j]=str[n];
-    j++;
-    if (j==6)
-     {
-      i++;
-      j=0;	
-     }
-   }
+	
+	return solved;
 }

@@ -12,152 +12,35 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include <string>
 #include "car.h"
 
 class board{
 
-	public:
+public:
 	
 	static const int MAX_SIZE = 6;
 	static const int MAX_CARS = 18;
-/**
-	  *@brief Default constructor
-	  *
-	  *@details makes the board and sets the variables
-	  *
-	  *@pre 
-	  *
-	  *@post the board has been created with default variables
-	  *
-	  *@exception None
-	  *
-	  *@param[in] None
-	  *
-	  *@return None
-	  *
-	  *@note the default values for the board are * to represent empty space
-*/
-		board(){
-			carInArray = 0;
-			boardArr = new char*[MAX_SIZE];
-			for(int i = 0; i < MAX_SIZE; i++)
-			{
-				boardArr[i] = new char[MAX_SIZE];
-			}
-			for(int j = 0; j < MAX_SIZE; j++){
-				for(int i = 0; i < MAX_SIZE; i++){
-					boardArr[j][i] = '*';
-				}
-			}
-		}
-/**
-	  *@brief copy constructor
-	  *
-	  *@details copies the board and the variables from the other board
-	  *
-	  *@pre another board must exist
-	  *
-	  *@post the board has been created with the values set to the same as the other board
-	  *
-	  *@exception None
-	  *
-	  *@param[in] the board we are copying from
-	  *
-	  *@return None
-	  *
-	  *@note
-*/
-		board(const board& other){
-			carInArray = other.carInArray;
-			boardArr = new char*[MAX_SIZE];
-			for(int i = 0; i < MAX_SIZE; i++)
-			{
-				boardArr[i] = new char[MAX_SIZE];
-			}
-			for(int j = 0; j < MAX_SIZE; j++){
 
-				for(int i = 0; i < MAX_SIZE; i++){
-
-					boardArr[j][i] = other.boardArr[j][i];
-
-				}
-
-			}
-
-			for(int i = 0; i < MAX_CARS; i++){
-
-				carArr[i] = other.carArr[i];
-
-			}
-
-		}
-
-/**
-	  *@brief operator=
-	  *
-	  *@details copies the board and the variables from the other board
-	  *
-	  *@pre another board must exist
-	  *
-	  *@post the board has been created with the values set to the same as the other board
-	  *
-	  *@exception if the board being passed in has the same memory position as this board
-	  *
-	  *@param[in] the board we are copying from
-	  *
-	  *@return this board so we can chain
-	  *
-	  *@note
-*/
-
-		board& operator=(const board& other){
-
-			if(&other == this){}
-			else{
-				carInArray = other.carInArray;
-
-				for(int j = 0; j < MAX_SIZE; j++){
-
-					for(int i = 0; i < MAX_SIZE; i++){
-						boardArr[j][i] = other.boardArr[j][i];
-					}
-
-				}
-
-				for(int i = 0; i < MAX_CARS; i++){
-					carArr[i] = other.carArr[i];
-				}
-
-			}
-
-			return (*this);
-
-		}
-		
-		char** getBoard() const
-		{
-			return boardArr;
-		}
-		
-		void setBoard(char newBoard[MAX_SIZE][MAX_SIZE])
-		{
-			for(int i = 0; i < MAX_SIZE; i++)
-			{
-				for(int j = 0; j < MAX_SIZE; j++)
-				{
-					boardArr[i][j] = newBoard[i][j];
-				}
-			}
-		}
-		
-		~board()
-		{
-			for(int i = 0; i < MAX_SIZE; i++)
-			{
-				delete[] boardArr[i];
-			}
-			delete[] boardArr;
-		}
+	std::string getBoard() const
+	{
+		return boardArr;
+	}
+	
+	void setBoard(std::string newBoard)
+	{
+		boardArr = newBoard;
+	}
+	
+	car getCar(int carNum) const
+	{
+		return carArr[carNum];
+	}
+	
+	int getNumOfCars() const
+	{
+		return carInArray;
+	}
 		
 /**
 	  *@brief add
@@ -183,9 +66,8 @@ class board{
 			if(orientation == 'H'){
 
 				for(int i = 0; i < sizeCar; i++){
-
-					boardArr[yLoc][xLoc + i] = carNum+48;
-
+					boardArr[yLoc * MAX_SIZE + (xLoc + i)] = carNum+48;
+					
 				}
 
 			}
@@ -193,8 +75,7 @@ class board{
 			else{
 
 				for(int i = 0; i < sizeCar; i++){
-
-					boardArr[yLoc + i][xLoc] = carNum+48;
+					boardArr[(yLoc + i) * MAX_SIZE + xLoc] = carNum+48;
 
 				}				
 
@@ -228,8 +109,8 @@ class board{
 
 				for(int i = 0; i < other.size; i++){
 
-					boardArr[other.y][other.x + i] = carNum+48;
-
+					boardArr[other.y * MAX_SIZE + (other.x + i)] = carNum+48;
+					
 				}
 
 			}
@@ -238,7 +119,7 @@ class board{
 
 				for(int i = 0; i < other.size; i++){
 
-					boardArr[other.y + i][other.x] = carNum+48;
+					boardArr[(other.y + i) * MAX_SIZE + other.x] = carNum+48;
 
 				}				
 
@@ -270,8 +151,8 @@ class board{
 
 				for(int i = 0; i < carArr[carNum].size; i++){
 
-					boardArr[carArr[carNum].y][(carArr[carNum].x) + i] = '*';
-
+					boardArr[carArr[carNum].y * MAX_SIZE + (carArr[carNum].x + i)] = '*';
+					
 				}
 
 			}
@@ -279,7 +160,7 @@ class board{
 
 				for(int i = 0; i < carArr[carNum].size; i++){
 
-					boardArr[(carArr[carNum].y) + i][(carArr[carNum].x)] = '*';
+					boardArr[(carArr[carNum].y + i) * MAX_SIZE + carArr[carNum].x] = '*';
 
 				}
 
@@ -309,7 +190,7 @@ class board{
 
 			if(carArr[carNum].direction == 'H'){
 
-				if((boardArr[carArr[carNum].y][carArr[carNum].x - 1] == '*') && (carArr[carNum].x - 1 >= 0)){
+				if((boardArr[carArr[carNum].y * MAX_SIZE + (carArr[carNum].x - 1)] == '*') && (carArr[carNum].x - 1 >= 0)){
 					
 					ableMove = true;
 
@@ -330,15 +211,16 @@ class board{
 
 			else{
 			
-				if((boardArr[(carArr[carNum].y - 1)][carArr[carNum].x] == '*') && (carArr[carNum].y - 1 >= 0)){
+				
+				if((boardArr[(carArr[carNum].y - 1) * MAX_SIZE + carArr[carNum].x] == '*') && (carArr[carNum].y - 1 >= 0)){
 					
 					ableMove = true;
-
+	
 					deleteCar(carNum);
 					carArr[carNum].y -= 1;
-
+	
 					add(carArr[carNum], carNum);
-
+	
 				}
 
 				else{
@@ -375,15 +257,14 @@ class board{
 
 			if(carArr[carNum].direction == 'H'){
 			
-				if((boardArr[(carArr[carNum].y )][carArr[carNum].x + carArr[carNum].size] == '*') && (carArr[carNum].x + 1 < 5)){
-					
+				if((boardArr[(carArr[carNum].y) * MAX_SIZE + (carArr[carNum].x + carArr[carNum].size)] == '*') && (carArr[carNum].x + 1 < 5))
+				{
 					ableMove = true;
 
 					deleteCar(carNum);
 					carArr[carNum].x += 1;
 
 					add(carArr[carNum], carNum);
-
 				}
 
 				else{
@@ -395,16 +276,14 @@ class board{
 			}
 
 			else{
-				
-				if((boardArr[(carArr[carNum].y + carArr[carNum].size)][carArr[carNum].x] == '*') && (carArr[carNum].y + 1 < 6)){
-					
+				if((boardArr[(carArr[carNum].y + carArr[carNum].size) * MAX_SIZE + carArr[carNum].x] == '*') && (carArr[carNum].y + 1 < 6))
+				{
 					ableMove = true;
 
 					deleteCar(carNum);
 					carArr[carNum].y += 1;
 
 					add(carArr[carNum], carNum);
-
 				}
 
 				else{
@@ -418,11 +297,11 @@ class board{
 			return ableMove;
 
 		}
-
-		int carInArray;
-//		char boardArr[MAX_SIZE][MAX_SIZE];
-		char** boardArr;
-		car carArr[MAX_CARS];
+		
+private:
+	int carInArray;
+	car carArr[MAX_CARS];
+	std::string boardArr;
 
 };
 
