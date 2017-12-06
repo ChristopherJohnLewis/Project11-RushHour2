@@ -5,8 +5,8 @@
   *
   *@details Implements the algorithm that we need to solve the game as well as reads in to the board
   *
-  *@version 1.00
-  *@author Chris Lewis (October 4, 2017)
+  *@version 2.00
+  *@author Chris Lewis, Autumn Cuellar, Alex Pasinski (December 5, 2017)
 */
 
 //
@@ -17,7 +17,6 @@
 #include <map>
 #include <vector>
 
-//#include "Timer.h" //Found out the 8 car case finishes in about 103.4 seconds
 #include "car.h"
 #include "board.h"
 
@@ -34,7 +33,7 @@ bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dic
 	  *
 	  *@post the board has been solved and the user has quit the program
 	  *
-	  *@exception None
+	  *@exception none
 	  *
 	  *@return None
 	  *
@@ -61,6 +60,7 @@ int main(){
 		// Push first board.
 		workQueue.push(playBoard.getBoard());
 		dictionary.insert(std::pair<std::string, int>(playBoard.getBoard(), 0));
+		// solve the board and output the results
 		if(SolveIt(workQueue, dictionary, playBoard, finalMoves))
 		{
 			std::cout << "Scenario "<< i << " requires " << finalMoves << " moves" << std::endl;
@@ -80,15 +80,15 @@ int main(){
 /**
 	  *@brief ReadIn
 	  *
-	  *@details reads in from the user into the board
+	  *@details reads input from the user into the board
 	  *
 	  *@post the board has been filled in
 	  *
 	  *@exception None
 	  *
-	  *@param[in] the board that we are filling in (should be filled with '*')
+	  *@param[in] the board that we are filling in (initially filled with '*')
 	  *
-	  *@param[out] the board has been filled in
+	  *@param[out] the board has been filled in with the cars
 	  *
 	  *@return if the numCars the user entered in is 0 return false to exit out of the loop in main, if true it continues
 	  *
@@ -119,7 +119,7 @@ bool readIn(board& playBoard){
 /**
 	  *@brief didWeWin
 	  *
-	  *@details Checks if the 0th element car is at the border of the array
+	  *@details Checks if the 0th element car is at the border of the board
 	  *
 	  *@pre Board must have been made and has atleast one car in it
 	  *
@@ -127,9 +127,9 @@ bool readIn(board& playBoard){
 	  *
 	  *@exception None
 	  *
-	  *@param[in] takes in the board that we use to solve the problem
+	  *@param[in] takes in the board that we are currently using to solve the problem
 	  *
-	  *@return bool that says if the car has made it to the end of the array or not
+	  *@return bool that says if the car has made it to the end of the board or not
 	  *
 	  *@note None
 */
@@ -147,7 +147,7 @@ bool DidWeWin(const board& playBoard){
 /**
 	  *@brief SolveIt
 	  *
-	  *@details the main algorithm in the program. It tests every single move the car can make recursively. A depth first brute first way of doing things.
+	  *@details the main algorithm in the program. It tests every single move the car can make. Breadth-first search is being used.
 	  *
 	  *@pre Board must have been made and has atleast one car in it
 	  *
@@ -155,9 +155,9 @@ bool DidWeWin(const board& playBoard){
 	  *
 	  *@exception None
 	  *
-	  *@param[in] takes in an int that says how many moves we've done in this current section of the tree. The board that has all of the data in it
+	  *@param[in] takes in an int reference that says how many moves to solve the board, a map holding the boards we visted, a queue holding the current boards to use, and a board for the original board  
 	  *
-	  *@return None
+	  *@return true if the board was solved, otherwise false
 	  *
 	  *@note moves is only really used after the first recursive call
 */
@@ -183,7 +183,7 @@ bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dic
 			solved = false;
 		}
 		
-		// Check each board in the queue by popping and pushing them around.
+		// Check each board in the queue to see if we won by popping and pushing them around.
 		for(unsigned int i = 0; i < workQueue.size() && !done; i++)
 		{
 			playBoard.setBoard(workQueue.front());
