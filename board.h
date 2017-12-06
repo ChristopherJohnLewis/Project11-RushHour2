@@ -45,6 +45,23 @@ public:
 	{
 		return carArr[carNum];
 	}
+	void setCar(int carNum, car newCar)
+	{
+		carArr[carNum] = newCar;
+	}
+	
+	car* getCars()
+	{
+		return carArr;
+	}
+	
+	void setCars(const car* cars)
+	{
+		for(int i = 0; i < MAX_CARS; i++)
+		{
+			carArr[i] = cars[i];
+		}
+	}
 	
 	int getNumOfCars() const
 	{
@@ -281,7 +298,7 @@ public:
 
 			if(carArr[carNum].direction == 'H'){
 			
-				if((boardArr[(carArr[carNum].y) * MAX_SIZE + (carArr[carNum].x + carArr[carNum].size)] == '*') && (carArr[carNum].x + 1 < 5))
+				if((boardArr[(carArr[carNum].y) * MAX_SIZE + (carArr[carNum].x + carArr[carNum].size)] == '*') && (carArr[carNum].x + 1 < 6))
 				{
 					ableMove = true;
 

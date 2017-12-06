@@ -15,6 +15,7 @@
 #include <iostream>
 #include <queue>
 #include <map>
+#include <vector>
 
 //#include "Timer.h" //Found out the 8 car case finishes in about 103.4 seconds
 #include "car.h"
@@ -133,9 +134,12 @@ bool readIn(board& playBoard){
 	  *@note None
 */
 bool DidWeWin(const board& playBoard){
-	if(playBoard.getCar(0).x + playBoard.getCar(0).size == 6)
+	for(int i = 0; i < board::MAX_SIZE; i++)
 	{
-		return true;
+		if(playBoard.getBoard()[i*board::MAX_SIZE+5] == '0')
+		{
+			return true;
+		}
 	}
 	return false;
 }
@@ -158,9 +162,17 @@ bool DidWeWin(const board& playBoard){
 	  *@note moves is only really used after the first recursive call
 */
 bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dictionary, board& playBoard, int& finalMoves){
-	bool done = false, solved = false;
-	int moves = 0;
-	int count = workQueue.size();
+	bool done = false, solved = false;	// Done tells us if we've reached a stopping point and solved tells us if we've solved it.
+	int moves = 0;	// Used to store the number of moves so far.
+	int count = workQueue.size();	// Used so that we can loop through each queue once without going until the queue is empty.
+	std::queue<car> carQueue;	// This queue holds the cars for each instance of a board in the workQueue.
+	
+	// Since the queue can't easily be made to hold arrays of cars, we instead loop through each element in the car array push it onto the queue
+	// Because the queues are pushed and popped at the same rate, we can be confident in simply pushing each car on without an array structure to hold them.
+	for(int i = 0; i < playBoard.getNumOfCars(); i++)
+	{
+		carQueue.push(playBoard.getCar(i));
+	}
 	
 	while(!done)
 	{
@@ -170,6 +182,8 @@ bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dic
 			done = true;
 			solved = false;
 		}
+		
+		// Check each board in the queue by popping and pushing them around.
 		for(unsigned int i = 0; i < workQueue.size() && !done; i++)
 		{
 			playBoard.setBoard(workQueue.front());
@@ -179,13 +193,21 @@ bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dic
 				done = true;
 				solved = true;
 			}
+			
 			workQueue.pop();
 			workQueue.push(playBoard.getBoard());
 		}
+		
 		moves++;	// Increment moves for each level of tree.
 		for(int i = 0; i < count && !done; i++)
 		{
 			playBoard.setBoard(workQueue.front());
+			for(int i = 0; i < playBoard.getNumOfCars(); i++)
+			{
+				playBoard.setCar(i, carQueue.front());
+				carQueue.pop();
+			}
+			
 			workQueue.pop();
 			for(int j = 0; j < playBoard.getNumOfCars(); j++)
 			{
@@ -195,15 +217,24 @@ bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dic
 					{
 						dictionary.insert(std::pair<std::string, int>(playBoard.getBoard(), moves));
 						workQueue.push(playBoard.getBoard());
+						for(int i = 0; i < playBoard.getNumOfCars(); i++)
+						{
+							carQueue.push(playBoard.getCar(i));
+						}
 					}
 					playBoard.moveBack(j);
 				}
+				
 				if(playBoard.moveBack(j))
 				{
 					if(dictionary.find(playBoard.getBoard()) == dictionary.end())
 					{
 						dictionary.insert(std::pair<std::string, int>(playBoard.getBoard(), moves));
 						workQueue.push(playBoard.getBoard());
+						for(int i = 0; i < playBoard.getNumOfCars(); i++)
+						{
+							carQueue.push(playBoard.getCar(i));
+						}
 					}
 					playBoard.moveForward(j);
 				}
