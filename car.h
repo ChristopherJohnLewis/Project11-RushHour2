@@ -6,7 +6,7 @@
   *@details creates a simple car class to hold the 4 values that defines the car
   *
   *@version 1.00
-  *@author Chris Lewis (October 4, 2017)
+  *@author Chris Lewis, Autumn Cuellar, Alex Pasinski (December 5, 2017)
 */
 
 #ifndef CAR_H
