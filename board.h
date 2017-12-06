@@ -5,8 +5,8 @@
   *
   *@details The class that keeps track of the cars, and the board that we are playing on
   *
-  *@version 1.00
-  *@author Chris Lewis (October 4, 2017)
+  *@version 2.00
+  *@author Chris Lewis, Autumn Cuellar, Alex Pansinski (December 5, 2017)
 */
 
 #ifndef BOARD_H
@@ -21,6 +21,11 @@ public:
 	
 	static const int MAX_SIZE = 6;
 	static const int MAX_CARS = 18;
+	
+	/**
+	 Name: board (constructor)
+	 Function: creates an empty board
+	**/
 
 	board()
 	{
@@ -31,29 +36,74 @@ public:
 		carInArray = 0;
 	}
 	
+	/**
+	 Name: getBoard
+	 Function: returns the value of boardArr
+	 @return a string that represents the board
+	 This function has a const signature.
+	**/
+	
 	std::string getBoard() const
 	{
 		return boardArr;
 	}
+	
+	
+	/**
+	 Name: setBoard
+	 @param a string representing the new board
+	 Function: sets boardArr to hold a new board
+	**/
 	
 	void setBoard(std::string newBoard)
 	{
 		boardArr = newBoard;
 	}
 	
+	
+	/**
+	 Name: getCar
+	 @param an int for the index
+	 Function: returns the car at the index carNum
+	 @return a car object
+	 This function has a const signature.
+	**/
+	
 	car getCar(int carNum) const
 	{
 		return carArr[carNum];
 	}
+	
+	
+	/**
+	 Name: setCar
+	 @param an int called carNum and a car object called newCar
+	 Function: sets the car in carArr at index carNum to be newCar
+	**/
+	
 	void setCar(int carNum, car newCar)
 	{
 		carArr[carNum] = newCar;
 	}
 	
+	
+	/**
+	 Name: getCars
+	 Function: returns the carArr
+	 @return a car pointer to the first element in carArr
+	**/
+	
 	car* getCars()
 	{
 		return carArr;
 	}
+	
+	
+	/**
+	 Name: setCars
+	 @param a const car pointer for an array
+	 Function: sets carArr to have the same cars as the cars array
+	**/
 	
 	void setCars(const car* cars)
 	{
@@ -63,15 +113,35 @@ public:
 		}
 	}
 	
+	
+	/**
+	 Name: getNumOfCars
+	 Function: returns how many cars are in carArr
+	 @return an int representing the number of cars
+	**/
+	
 	int getNumOfCars() const
 	{
 		return carInArray;
 	}
 	
+	
+	/**
+	 Name: setNumOfCars
+	 @param an int called numOfCars
+	 Function: changes carInArray to numOfCars
+	**/
+	
 	void setNumOfCars(int numOfCars)
 	{
 		carInArray = numOfCars;
 	}
+	
+	
+	/**
+	 Name: clear
+	 Function: makes the calling board empty
+	**/
 	
 	void clear()
 	{
@@ -170,7 +240,7 @@ public:
 /**
 	  *@brief deleteCar
 	  *
-	  *@details deletes the car from the array 
+	  *@details deletes the car from the car array and board 
 	  *
 	  *@pre a car must exist
 	  *
@@ -215,13 +285,13 @@ public:
 	  *
 	  *@pre a car must exist
 	  *
-	  *@post the car has been moved on the board
+	  *@post the car has been moved backwards on the board
 	  *
 	  *@exception if their is something stopping the car from going backwards (another car or border) returns false
 	  *
 	  *@param[in] the number of the car that we want to move back
 	  *
-	  *@return true if the function executed properly false if the exception has been hit
+	  *@return true if the function executed properly, false if the exception has been hit
 	  *
 	  *@note
 */
@@ -284,11 +354,11 @@ public:
 	  *
 	  *@post the car has moved one space forward on the board
 	  *
-	  *@exception if the car has something obstructing it from going forward returns false
+	  *@exception if the car has something obstructing it from going forward (another car or border) returns false
 	  *
 	  *@param[in] the number of the car we are moving forward
 	  *
-	  *@return true if the function executes properly and false if the exception has been hit
+	  *@return true if the function executes properly, false if the exception has been hit
 	  *
 	  *@note 
 */
