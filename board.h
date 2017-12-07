@@ -368,7 +368,7 @@ public:
 
 			if(carArr[carNum].direction == 'H'){
 			
-				if((boardArr[(carArr[carNum].y) * MAX_SIZE + (carArr[carNum].x + carArr[carNum].size)] == '*') && (carArr[carNum].x + 1 < 6))
+				if((boardArr[(carArr[carNum].y) * MAX_SIZE + (carArr[carNum].x + carArr[carNum].size)] == '*') && (carArr[carNum].x + carArr[carNum].size < 6)
 				{
 					ableMove = true;
 
@@ -387,7 +387,8 @@ public:
 			}
 
 			else{
-				if((boardArr[(carArr[carNum].y + carArr[carNum].size) * MAX_SIZE + carArr[carNum].x] == '*') && (carArr[carNum].y + 1 < 6))
+				if((boardArr[(carArr[carNum].y + carArr[carNum].size) * MAX_SIZE + carArr[carNum].x] == '*') && (carArr[carNum].y + carArr[carNum].size < 6))
+
 				{
 					ableMove = true;
 
@@ -413,7 +414,6 @@ private:
 	int carInArray;
 	car carArr[MAX_CARS];
 	std::string boardArr;
-
 };
 
 #endif

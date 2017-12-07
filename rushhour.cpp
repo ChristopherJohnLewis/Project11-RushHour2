@@ -173,8 +173,8 @@ bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dic
 	{
 		carQueue.push(playBoard.getCar(i));
 	}
-	
-	while(!done)
+	while(!done) 
+
 	{
 		count = workQueue.size();
 		if(workQueue.size() == 0)	// workQueue should only be 0 if there are no more options left to move.
@@ -193,7 +193,6 @@ bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dic
 				done = true;
 				solved = true;
 			}
-			
 			workQueue.pop();
 			workQueue.push(playBoard.getBoard());
 		}
@@ -244,3 +243,4 @@ bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dic
 	
 	return solved;
 }
+
