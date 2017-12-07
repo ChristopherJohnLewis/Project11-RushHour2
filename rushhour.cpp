@@ -193,8 +193,6 @@ bool SolveIt(std::queue<std::string>& workQueue, std::map<std::string, int>& dic
 				done = true;
 				solved = true;
 			}
-			//std::cout << i << " scenario board: "<<std::endl << std::endl;
-			//PrintOut(workQueue.front());
 			workQueue.pop();
 			workQueue.push(playBoard.getBoard());
 			
