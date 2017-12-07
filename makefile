@@ -1,11 +1,8 @@
 
 all: rushhour
 
-rushhour: rushhour.o Timer.o
-	g++ -pg  -o rushhour rushhour.o Timer.o
-
-Timer.o: Timer.cpp
-	g++ -pg -c Timer.cpp
+rushhour: rushhour.o
+	g++ -pg  -o rushhour rushhour.o
 
 clean:
 	rm -f rushhour; rm -f rushhour.o

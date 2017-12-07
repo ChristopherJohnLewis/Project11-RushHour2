@@ -5,143 +5,154 @@
   *
   *@details The class that keeps track of the cars, and the board that we are playing on
   *
-  *@version 1.00
-  *@author Chris Lewis (October 4, 2017)
+  *@version 2.00
+  *@author Chris Lewis, Autumn Cuellar, Alex Pansinski (December 5, 2017)
 */
 
 #ifndef BOARD_H
 #define BOARD_H
 
+#include <string>
 #include "car.h"
 
 class board{
 
-	public:
-/**
-	  *@brief Default constructor
-	  *
-	  *@details makes the board and sets the variables
-	  *
-	  *@pre 
-	  *
-	  *@post the board has been created with default variables
-	  *
-	  *@exception None
-	  *
-	  *@param[in] None
-	  *
-	  *@return None
-	  *
-	  *@note the default values for the board are * to represent empty space
-*/
-		board(){
+public:
+	
+	static const int MAX_SIZE = 6;
+	static const int MAX_CARS = 18;
+	
+	/**
+	 Name: board (constructor)
+	 Function: creates an empty board
+	**/
 
-			cap = 10;
-			carInArray = 0;
-
-			for(int j = 0; j < 6; j++){
-
-				for(int i = 0; i < 6; i++){
-
-					boardArr[j][i] = '*';
-
-				}
-
-			}
-
-			bestMoves = 100;
-
+	board()
+	{
+		for(int i = 0; i < MAX_SIZE*MAX_SIZE; i++)
+		{
+			boardArr += '*';
 		}
-/**
-	  *@brief copy constructor
-	  *
-	  *@details copies the board and the variables from the other board
-	  *
-	  *@pre another board must exist
-	  *
-	  *@post the board has been created with the values set to the same as the other board
-	  *
-	  *@exception None
-	  *
-	  *@param[in] the board we are copying from
-	  *
-	  *@return None
-	  *
-	  *@note
-*/
-		board(const board& other){
-
-			bestMoves = other.bestMoves;
-			carInArray = other.carInArray;
-			cap = other.cap;
-
-			for(int j = 0; j < 6; j++){
-
-				for(int i = 0; i < 6; i++){
-
-					boardArr[j][i] = other.boardArr[j][i];
-
-				}
-
-			}
-
-			for(int i = 0; i < 10; i++){
-
-				carArr[i] = other.carArr[i];
-
-			}
-
+		carInArray = 0;
+	}
+	
+	/**
+	 Name: getBoard
+	 Function: returns the value of boardArr
+	 @return a string that represents the board
+	 This function has a const signature.
+	**/
+	
+	std::string getBoard() const
+	{
+		return boardArr;
+	}
+	
+	
+	/**
+	 Name: setBoard
+	 @param a string representing the new board
+	 Function: sets boardArr to hold a new board
+	**/
+	
+	void setBoard(std::string newBoard)
+	{
+		boardArr = newBoard;
+	}
+	
+	
+	/**
+	 Name: getCar
+	 @param an int for the index
+	 Function: returns the car at the index carNum
+	 @return a car object
+	 This function has a const signature.
+	**/
+	
+	car getCar(int carNum) const
+	{
+		return carArr[carNum];
+	}
+	
+	
+	/**
+	 Name: setCar
+	 @param an int called carNum and a car object called newCar
+	 Function: sets the car in carArr at index carNum to be newCar
+	**/
+	
+	void setCar(int carNum, car newCar)
+	{
+		carArr[carNum] = newCar;
+	}
+	
+	
+	/**
+	 Name: getCars
+	 Function: returns the carArr
+	 @return a car pointer to the first element in carArr
+	**/
+	
+	car* getCars()
+	{
+		return carArr;
+	}
+	
+	
+	/**
+	 Name: setCars
+	 @param a const car pointer for an array
+	 Function: sets carArr to have the same cars as the cars array
+	**/
+	
+	void setCars(const car* cars)
+	{
+		for(int i = 0; i < MAX_CARS; i++)
+		{
+			carArr[i] = cars[i];
 		}
-
-/**
-	  *@brief operator=
-	  *
-	  *@details copies the board and the variables from the other board
-	  *
-	  *@pre another board must exist
-	  *
-	  *@post the board has been created with the values set to the same as the other board
-	  *
-	  *@exception if the board being passed in has the same memory position as this board
-	  *
-	  *@param[in] the board we are copying from
-	  *
-	  *@return this board so we can chain
-	  *
-	  *@note
-*/
-
-		board& operator=(const board& other){
-
-			if(&other == this){}
-			
-			else{
-				
-				bestMoves = other.bestMoves;
-				carInArray = other.carInArray;
-				cap = other.cap;
-
-				for(int j = 0; j < 6; j++){
-
-					for(int i = 0; i < 6; i++){
-
-						boardArr[j][i] = other.boardArr[j][i];
-
-					}
-
-				}
-
-				for(int i = 0; i < 10; i++){
-
-					carArr[i] = other.carArr[i];
-
-				}
-
-			}
-
-			return (*this);
-
+	}
+	
+	
+	/**
+	 Name: getNumOfCars
+	 Function: returns how many cars are in carArr
+	 @return an int representing the number of cars
+	**/
+	
+	int getNumOfCars() const
+	{
+		return carInArray;
+	}
+	
+	
+	/**
+	 Name: setNumOfCars
+	 @param an int called numOfCars
+	 Function: changes carInArray to numOfCars
+	**/
+	
+	void setNumOfCars(int numOfCars)
+	{
+		carInArray = numOfCars;
+	}
+	
+	
+	/**
+	 Name: clear
+	 Function: makes the calling board empty
+	**/
+	
+	void clear()
+	{
+		for(int i = 0; i < MAX_SIZE*MAX_SIZE; i++)
+		{
+			boardArr[i] = '*';
 		}
+		carInArray = 0;
+	}
+	
+		
 /**
 	  *@brief add
 	  *
@@ -166,9 +177,8 @@ class board{
 			if(orientation == 'H'){
 
 				for(int i = 0; i < sizeCar; i++){
-
-					boardArr[yLoc][xLoc + i] = carNum+48;
-
+					boardArr[yLoc * MAX_SIZE + (xLoc + i)] = carNum+48;
+					
 				}
 
 			}
@@ -176,8 +186,7 @@ class board{
 			else{
 
 				for(int i = 0; i < sizeCar; i++){
-
-					boardArr[yLoc + i][xLoc] = carNum+48;
+					boardArr[(yLoc + i) * MAX_SIZE + xLoc] = carNum+48;
 
 				}				
 
@@ -211,8 +220,8 @@ class board{
 
 				for(int i = 0; i < other.size; i++){
 
-					boardArr[other.y][other.x + i] = carNum+48;
-
+					boardArr[other.y * MAX_SIZE + (other.x + i)] = carNum+48;
+					
 				}
 
 			}
@@ -221,7 +230,7 @@ class board{
 
 				for(int i = 0; i < other.size; i++){
 
-					boardArr[other.y + i][other.x] = carNum+48;
+					boardArr[(other.y + i) * MAX_SIZE + other.x] = carNum+48;
 
 				}				
 
@@ -231,7 +240,7 @@ class board{
 /**
 	  *@brief deleteCar
 	  *
-	  *@details deletes the car from the array 
+	  *@details deletes the car from the car array and board 
 	  *
 	  *@pre a car must exist
 	  *
@@ -253,8 +262,8 @@ class board{
 
 				for(int i = 0; i < carArr[carNum].size; i++){
 
-					boardArr[carArr[carNum].y][(carArr[carNum].x) + i] = '*';
-
+					boardArr[carArr[carNum].y * MAX_SIZE + (carArr[carNum].x + i)] = '*';
+					
 				}
 
 			}
@@ -262,7 +271,7 @@ class board{
 
 				for(int i = 0; i < carArr[carNum].size; i++){
 
-					boardArr[(carArr[carNum].y) + i][(carArr[carNum].x)] = '*';
+					boardArr[(carArr[carNum].y + i) * MAX_SIZE + carArr[carNum].x] = '*';
 
 				}
 
@@ -276,13 +285,13 @@ class board{
 	  *
 	  *@pre a car must exist
 	  *
-	  *@post the car has been moved on the board
+	  *@post the car has been moved backwards on the board
 	  *
 	  *@exception if their is something stopping the car from going backwards (another car or border) returns false
 	  *
 	  *@param[in] the number of the car that we want to move back
 	  *
-	  *@return true if the function executed properly false if the exception has been hit
+	  *@return true if the function executed properly, false if the exception has been hit
 	  *
 	  *@note
 */
@@ -292,7 +301,7 @@ class board{
 
 			if(carArr[carNum].direction == 'H'){
 
-				if((boardArr[carArr[carNum].y][carArr[carNum].x - 1] == '*') && (carArr[carNum].x - 1 >= 0)){
+				if((boardArr[carArr[carNum].y * MAX_SIZE + (carArr[carNum].x - 1)] == '*') && (carArr[carNum].x - 1 >= 0)){
 					
 					ableMove = true;
 
@@ -313,15 +322,16 @@ class board{
 
 			else{
 			
-				if((boardArr[(carArr[carNum].y - 1)][carArr[carNum].x] == '*') && (carArr[carNum].y - 1 >= 0)){
+				
+				if((boardArr[(carArr[carNum].y - 1) * MAX_SIZE + carArr[carNum].x] == '*') && (carArr[carNum].y - 1 >= 0)){
 					
 					ableMove = true;
-
+	
 					deleteCar(carNum);
 					carArr[carNum].y -= 1;
-
+	
 					add(carArr[carNum], carNum);
-
+	
 				}
 
 				else{
@@ -344,11 +354,11 @@ class board{
 	  *
 	  *@post the car has moved one space forward on the board
 	  *
-	  *@exception if the car has something obstructing it from going forward returns false
+	  *@exception if the car has something obstructing it from going forward (another car or border) returns false
 	  *
 	  *@param[in] the number of the car we are moving forward
 	  *
-	  *@return true if the function executes properly and false if the exception has been hit
+	  *@return true if the function executes properly, false if the exception has been hit
 	  *
 	  *@note 
 */
@@ -358,15 +368,14 @@ class board{
 
 			if(carArr[carNum].direction == 'H'){
 			
-				if((boardArr[(carArr[carNum].y )][carArr[carNum].x + carArr[carNum].size] == '*') && (carArr[carNum].x + 1 < 5)){
-					
+				if((boardArr[(carArr[carNum].y) * MAX_SIZE + (carArr[carNum].x + carArr[carNum].size)] == '*') && (carArr[carNum].x + carArr[carNum].size < 6))
+				{
 					ableMove = true;
 
 					deleteCar(carNum);
 					carArr[carNum].x += 1;
 
 					add(carArr[carNum], carNum);
-
 				}
 
 				else{
@@ -378,16 +387,14 @@ class board{
 			}
 
 			else{
-				
-				if((boardArr[(carArr[carNum].y + carArr[carNum].size)][carArr[carNum].x] == '*') && (carArr[carNum].y + 1 < 6)){
-					
+				if((boardArr[(carArr[carNum].y + carArr[carNum].size) * MAX_SIZE + carArr[carNum].x] == '*') && (carArr[carNum].y + carArr[carNum].size < 6))
+				{
 					ableMove = true;
 
 					deleteCar(carNum);
 					carArr[carNum].y += 1;
 
 					add(carArr[carNum], carNum);
-
 				}
 
 				else{
@@ -401,13 +408,11 @@ class board{
 			return ableMove;
 
 		}
-
-		int cap;
-		int carInArray;
-		int bestMoves;
-		char boardArr[6][6];
-		car carArr[10];
-
+		
+private:
+	int carInArray;
+	car carArr[MAX_CARS];
+	std::string boardArr;
 };
 
 #endif
